@@ -3,8 +3,8 @@
     <svg :style="style" @mousemove="ejaculate" v-if="levelReady">
       <ovum
         v-for="ovum in ovums"
-        :key="ovum.key"
-        :id="ovum.key"
+        :key="ovum.id"
+        :id="ovum.id"
         :d="ovum.shape"
         :width="width"
         :height="height"
@@ -17,14 +17,13 @@
       />
       <sperma :width="width" :height="height" :target="target" :frame="frame" />
     </svg>
-    <p v-if="done">Done</p>
   </div>
 </template>
 
 <script>
 import Sperma from "./sprites/Sperma.vue";
 import Ovum from "./sprites/Ovum.vue";
-import store from './store'
+import store from "./store";
 export default {
   name: "Solo",
   store,
@@ -48,14 +47,20 @@ export default {
       germs: [],
       ovums: [],
       assetsLoaded: false,
-      levelReady: false
+      levelReady: false,
+      isPaused: false
     };
   },
   mounted() {
-    this.animate();
+    this.resize();
+    window.addEventListener("resize", this.resize);
     this.loadAssets();
   },
   methods: {
+    resize() {
+      this.width = this.$el.clientWidth;
+      this.height = this.$el.clientHeight - 4;
+    },
     place(percent, isVertical) {
       return percent * (isVertical ? this.height : this.width);
     },
@@ -64,7 +69,7 @@ export default {
     },
     animate() {
       requestAnimationFrame(this.animate);
-      this.frame++;
+      if (!(this.done || this.isPaused)) this.frame++;
     },
     loadAssets() {
       fetch("/mock/sprites.json")
@@ -82,27 +87,29 @@ export default {
           return response.json();
         })
         .then(level => {
-          level.sprites.forEach(character => {
+          level.sprites.forEach((character, i) => {
             if (character.type === "ovum") {
               const specie = this.sprites.find(
                 sprite => sprite.name === character.name
               );
-              this.ovums.push(Object.assign({}, character, specie));
+              this.ovums.push(Object.assign({id: i}, character, specie));
             } else {
               // germs
             }
           });
           this.levelReady = true;
         });
-    },
-    process (sperma, ovum) {
-
     }
   },
   watch: {
     assetsLoaded(isReady) {
       if (isReady) {
         this.loadLevel(this.level);
+      }
+    },
+    levelReady(isReady) {
+      if (isReady) {
+        this.animate();
       }
     }
   },
@@ -111,8 +118,11 @@ export default {
       return { height: `${this.height}px`, width: `${this.width}px` };
     },
     done() {
-      return this.$store.state.allFertelized
+      return this.$store.state.allFertelized;
     }
+  },
+  beforeDestroy() {
+    window.removeEventListener("resize", this.resize);
   }
 };
 </script>
@@ -120,5 +130,9 @@ export default {
 <style>
 svg {
   background-color: black;
+}
+#solo {
+  width: 100%;
+  height: 100%;
 }
 </style>

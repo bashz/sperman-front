@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="game">
     <solo v-if="mode === 'solo'"/>
     <multi v-if="mode === 'multi'"/>
     <home v-if="mode === 'menu'"/>
@@ -26,5 +26,7 @@ export default {
 </script>
 
 <style>
-
+#game {
+  height: 600px;
+}
 </style>
