@@ -1,0 +1,29 @@
+{
+  "id": "ff22ff22ff22",
+  "level": 1,
+  "sprites": [
+    {
+      "key": 1,
+      "type": "ovum",
+      "name": "ovum",
+      "x": 0.5,
+      "y": 0.5,
+      "vx": 3,
+      "vy": 2,
+      "vr": 1
+    },
+    {
+      "key": 2,
+      "type": "ovum",
+      "name": "ovum",
+      "x": 0.8,
+      "y": 0.5
+    }, {
+      "key": 3,
+      "type": "ovum",
+      "name": "ovum",
+      "x": 0.2,
+      "y": 0.5
+    }
+  ]
+}
