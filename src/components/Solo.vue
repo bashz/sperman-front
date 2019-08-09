@@ -1,5 +1,5 @@
 <template>
-  <div id="solo">
+  <div id="solo" tabindex="-1" @keyup.p="pause">
     <svg :style="style" @mousemove="ejaculate" v-if="levelReady">
       <ovum
         v-for="ovum in ovums"
@@ -16,20 +16,36 @@
         :frame="frame"
       />
       <sperma :width="width" :height="height" :target="target" :frame="frame" />
+      <germ
+        v-for="germ in germs"
+        :key="germ.id"
+        :id="germ.id"
+        :d="germ.shape"
+        :width="width"
+        :height="height"
+        :startOn="germ.startOn"
+        :speedMin="germ.speedMin"
+        :speedRange="germ.speedRange"
+        :spawnCycle="spawnCycle"
+        :spawnAt="germ.spawnAt"
+        :frame="frame"
+      />
     </svg>
   </div>
 </template>
 
 <script>
-import Sperma from "./sprites/Sperma.vue";
-import Ovum from "./sprites/Ovum.vue";
+import Sperma from "./sprites/Sperma";
+import Ovum from "./sprites/Ovum";
+import Germ from "./sprites/Germ";
 import store from "./store";
 export default {
   name: "Solo",
   store,
   components: {
     Sperma,
-    Ovum
+    Ovum,
+    Germ
   },
   props: {
     level: {
@@ -43,6 +59,7 @@ export default {
       width: 800,
       target: { x: 300, y: 400 },
       frame: 0,
+      spawnCycle: 500,
       sprites: [],
       germs: [],
       ovums: [],
@@ -54,9 +71,15 @@ export default {
   mounted() {
     this.resize();
     window.addEventListener("resize", this.resize);
+    this.$el.focus();
     this.loadAssets();
   },
   methods: {
+    pause(e) {
+      if (!e.ctrlKey && !e.altKey) {
+        this.isPaused = !this.isPaused
+      }
+    },
     resize() {
       this.width = this.$el.clientWidth;
       this.height = this.$el.clientHeight - 4;
@@ -69,7 +92,7 @@ export default {
     },
     animate() {
       requestAnimationFrame(this.animate);
-      if (!(this.done || this.isPaused)) this.frame++;
+      if (!(this.won || this.lost || this.isPaused )) this.frame++;
     },
     loadAssets() {
       fetch("/mock/sprites.json")
@@ -87,15 +110,14 @@ export default {
           return response.json();
         })
         .then(level => {
+          this.spawnCycle = level.spawnCycle || 500;
           level.sprites.forEach((character, i) => {
-            if (character.type === "ovum") {
-              const specie = this.sprites.find(
-                sprite => sprite.name === character.name
-              );
-              this.ovums.push(Object.assign({id: i}, character, specie));
-            } else {
-              // germs
-            }
+            const specie = this.sprites.find(
+              sprite => sprite.name === character.name
+            );
+            (character.type === "ovum" ? this.ovums : this.germs).push(
+              Object.assign({ id: i }, character, specie)
+            );
           });
           this.levelReady = true;
         });
@@ -117,8 +139,11 @@ export default {
     style() {
       return { height: `${this.height}px`, width: `${this.width}px` };
     },
-    done() {
+    won() {
       return this.$store.state.allFertelized;
+    },
+    lost() {
+      return this.$store.state.collision;
     }
   },
   beforeDestroy() {
@@ -134,5 +159,8 @@ svg {
 #solo {
   width: 100%;
   height: 100%;
+}
+#solo:focus {
+  border: none;
 }
 </style>

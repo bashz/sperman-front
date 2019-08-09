@@ -17,7 +17,8 @@ export default new Vuex.Store({
       tailY: []
     },
     ovums: {},
-    allFertelized: false
+    allFertelized: false,
+    collision: false
   },
   getters: {
     sperma(state) {
@@ -28,6 +29,9 @@ export default new Vuex.Store({
     },
     allFertelized(state) {
       return state.allFertelized
+    },
+    collision(state) {
+      return state.collision
     }
   },
   mutations: {
@@ -57,6 +61,18 @@ export default new Vuex.Store({
         }
       }
       return state.allFertelized = true
+    },
+    GERM_MOVED(state, germ) {
+      for (let i = 0; i < state.sperma.tailX.length; i++) {
+        if (
+          Math.sqrt(
+            (germ.x - state.sperma.tailX[i]) ** 2 +
+            (germ.y - state.sperma.tailY[i]) ** 2
+          ) <= germ.radius * germ.scale
+        ) {
+          state.collision = true
+        }
+      }
     }
   },
   actions: {
@@ -74,6 +90,9 @@ export default new Vuex.Store({
     },
     areAllFertelized(context) {
       context.commit('ARE_ALL_FERTELIZED')
+    },
+    germMoved(context, germ) {
+      context.commit('GERM_MOVED', germ)
     }
   }
 })
