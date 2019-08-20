@@ -35,6 +35,14 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    RESET(state) {
+      state.sperma.id = 0;
+      state.sperma.tailX = [];
+      state.sperma.tailY = [];
+      state.ovums = {};
+      state.allFertelized = false;
+      state.collision = false
+    },
     SPERMA_MOVED(state, sperma) {
       state.sperma = sperma
       for (let ovum in state.ovums) {
@@ -76,6 +84,9 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    reset(context) {
+      context.commit('RESET')
+    },
     spermaMoved(context, sperma) {
       context.commit('SPERMA_MOVED', sperma)
     },

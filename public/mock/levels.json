@@ -1,0 +1,9 @@
+[
+  {"level": 1, "isAvailable": true},
+  {"level": 2, "isAvailable": true},
+  {"level": 3, "isAvailable": true},
+  {"level": 4, "isAvailable": true},
+  {"level": 5, "isAvailable": false},
+  {"level": 6, "isAvailable": false},
+  {"level": 7, "isAvailable": false} 
+]

@@ -1,0 +1,49 @@
+{
+  "id": "ff22ff22ff33",
+  "level": 2,
+  "spawnCycle": 500,
+  "viscosity": 0.002,
+  "sprites": [
+    {
+      "type": "ovum",
+      "name": "alpha",
+      "x": 0.5,
+      "y": 0.5,
+      "vx": 1,
+      "vy": 0.5,
+      "vr": 1
+    },{
+      "type": "ovum",
+      "name": "alpha",
+      "x": 0.5,
+      "y": 0.6,
+      "vx": 0.3,
+      "vy": 0.5,
+      "vr": 1
+    },
+    {
+      "type": "germ",
+      "name": "azotobacter",
+      "startOn": "top",
+      "speedMin": 3,
+      "speedRange": 1,
+      "spawnAt": 50
+    },
+    {
+      "type": "germ",
+      "name": "ebola",
+      "startOn": "top",
+      "speedMin": 4,
+      "speedRange": 1,
+      "spawnAt": 150
+    },
+    {
+      "type": "germ",
+      "name": "bacillus",
+      "startOn": "top",
+      "speedMin": 3,
+      "speedRange": 1,
+      "spawnAt": 250
+    }
+  ]
+}

@@ -104,8 +104,8 @@ export default {
     swim() {
       this.x += this.vx;
       this.y += this.vy;
-      if (this.x <= 0 || this.x > this.width) this.vx *= -1;
-      if (this.y <= 0 || this.y > this.height) this.vy *= -1;
+      if (this.x <= this.left || this.x > this.right) this.vx *= -1;
+      if (this.y <= this.top || this.y > this.bottom) this.vy *= -1;
       this.angle += this.vr;
       this.$store.dispatch("ovumMoved", {
         id: this.id,
@@ -147,6 +147,18 @@ export default {
     },
     stroke() {
       return this.isFertelized ? "#44ff66" : "none";
+    },
+    top() {
+      return this.radius
+    },
+    left() {
+      return this.radius
+    },
+    bottom() {
+      return this.height - this.radius
+    },
+    right() {
+      return this.width - this.radius
     }
   }
 };

@@ -37,6 +37,10 @@ export default {
       type: Number,
       default: 1
     },
+    vr: {
+      type: Number,
+      default: 0
+    },
     // Germ's size
     scale: {
       type: Number,
@@ -72,7 +76,8 @@ export default {
       y: -10,
       vx: 0,
       vy: 0,
-      angle: 0
+      angle: 0,
+      initialFrame: this.frame
     };
   },
   methods: {
@@ -113,11 +118,12 @@ export default {
     swim() {
       this.x += this.vx;
       this.y += this.vy;
+      this.angle += this.vr;
     }
   },
   watch: {
     frame(frame) {
-      if (frame % this.spawnCycle === this.spawnAt) {
+      if ((frame - this.initialFrame) % this.spawnCycle === this.spawnAt) {
         this.spawn();
       } else {
         this.swim();

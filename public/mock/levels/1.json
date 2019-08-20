@@ -2,21 +2,14 @@
   "id": "ff22ff22ff22",
   "level": 1,
   "spawnCycle": 500,
+  "viscosity": 0.002,
   "sprites": [
     {
       "type": "ovum",
       "name": "alpha",
       "x": 0.5,
       "y": 0.5,
-      "vx": 1,
-      "vy": 0.5,
-      "vr": 1
-    },{
-      "type": "ovum",
-      "name": "alpha",
-      "x": 0.5,
-      "y": 0.6,
-      "vx": 0.3,
+      "vx": 0,
       "vy": 0.5,
       "vr": 1
     },
@@ -26,6 +19,7 @@
       "startOn": "top",
       "speedMin": 2,
       "speedRange": 1,
+      "vr": 3,
       "spawnAt": 50
     }
   ]
