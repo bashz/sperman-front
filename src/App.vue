@@ -32,4 +32,7 @@ export default {
 #game {
   height: 600px;
 }
+html {
+  font-family: kontrapunkt;
+}
 </style>

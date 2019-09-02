@@ -39,12 +39,81 @@
       />
     </svg>
     <div class="overlay" v-if="won">
-      <button @click="back">back</button>
-      <button @click="nextLevel">next</button>
+      <svg :style="style">
+        <menu-button
+          @click.native="back"
+          text="Menu"
+          :width="width"
+          :height="height"
+          :position="{x: .3, y: .5}"
+          :angle="-30"
+        />
+        <menu-button
+          v-if="scoreSaved"
+          :text="score.toString()"
+          :clickable="false"
+          :width="width"
+          :height="height"
+          :position="{x: .5, y: .5}"
+          :angle="0"
+        />
+        <menu-button
+          @click.native="nextLevel"
+          text="Next"
+          :width="width"
+          :height="height"
+          :position="{x: .7, y: .5}"
+          :angle="30"
+        />
+      </svg>
     </div>
-    <div class="overlay" v-if="lost || isPaused">
-      <button @click="back">back</button>
-      <button @click="restartLevel">restart</button>
+    <div class="overlay" v-if="lost">
+      <svg :style="style">
+        <menu-button
+          @click.native="back"
+          text="Menu"
+          :width="width"
+          :height="height"
+          :position="{x: .3, y: .5}"
+          :angle="-30"
+        />
+        <menu-button
+          @click.native="restartLevel"
+          text="Retry"
+          :width="width"
+          :height="height"
+          :position="{x: .7, y: .5}"
+          :angle="30"
+        />
+      </svg>
+    </div>
+    <div class="overlay" v-if="isPaused">
+      <svg :style="style">
+        <menu-button
+          @click.native="back"
+          text="Menu"
+          :width="width"
+          :height="height"
+          :position="{x: .3, y: .5}"
+          :angle="-30"
+        />
+        <menu-button
+          @click.native="pause"
+          text="Resume"
+          :width="width"
+          :height="height"
+          :position="{x: .5, y: .5}"
+          :angle="0"
+        />
+        <menu-button
+          @click.native="restartLevel"
+          text="Retry"
+          :width="width"
+          :height="height"
+          :position="{x: .7, y: .5}"
+          :angle="30"
+        />
+      </svg>
     </div>
   </div>
 </template>
@@ -53,6 +122,7 @@
 import Sperma from "../sprites/Sperma";
 import Ovum from "../sprites/Ovum";
 import Germ from "../sprites/Germ";
+import MenuButton from "../shapes/MenuButton";
 import store from "../store";
 export default {
   name: "Solo",
@@ -60,9 +130,18 @@ export default {
   components: {
     Sperma,
     Ovum,
-    Germ
+    Germ,
+    MenuButton
   },
   props: {
+    height: {
+      type: Number,
+      default: 600
+    },
+    width: {
+      type: Number,
+      default: 800
+    },
     entryLevel: {
       type: Number,
       default: 1
@@ -71,37 +150,27 @@ export default {
   data() {
     return {
       level: this.entryLevel,
-      height: 600,
-      width: 800,
       target: { x: 300, y: 400 },
       frame: 0,
-      dev_frame: 0,
-      dev_interval: 0,
       spawnCycle: 500,
       viscosity: 0.002,
       sprites: [],
       germs: [],
       ovums: [],
+      maxScore: 50000,
+      minScore: 5000,
+      score: 0,
       assetsLoaded: false,
       levelReady: false,
-      isPaused: false
+      isPaused: false,
+      firstFrame: 0,
+      scoreSaved: false
     };
   },
   mounted() {
-    this.resize();
-    window.addEventListener("resize", this.resize);
     this.loadAssets();
-    this.dev_fps();
   },
   methods: {
-    dev_fps() {
-      clearInterval(this.dev_interval)
-      this.dev_frame = this.frame;
-      this.dev_interval = setInterval(() => {
-        console.log("fps %c" + (this.frame - this.dev_frame), "color: red");
-        this.dev_frame = this.frame;
-      }, 1000);
-    },
     nextLevel() {
       this.level++;
     },
@@ -116,10 +185,6 @@ export default {
       if (!e.ctrlKey && !e.altKey && !this.won) {
         this.isPaused = !this.isPaused;
       }
-    },
-    resize() {
-      this.width = this.$el.clientWidth;
-      this.height = this.$el.clientHeight - 4;
     },
     place(percent, isVertical) {
       return percent * (isVertical ? this.height : this.width);
@@ -137,6 +202,8 @@ export default {
       this.ovums = [];
       this.target = { x: 300, y: 400 };
       this.levelReady = false;
+      this.score = 0;
+      this.scoreSaved = false;
     },
     loadAssets() {
       fetch("/mock/sprites.json")
@@ -156,6 +223,8 @@ export default {
         .then(level => {
           this.spawnCycle = level.spawnCycle || 500;
           this.viscosity = level.viscosity || 0.002;
+          this.maxScore = level.maxScore || 50000;
+          this.minScore = level.minScore || 5000;
           level.sprites.forEach((character, i) => {
             const specie = this.sprites.find(
               sprite => sprite.name === character.name
@@ -165,6 +234,25 @@ export default {
             );
           });
           this.levelReady = true;
+        });
+    },
+    submitScore() {
+      fetch(`/mock/score.json`, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        method: "GET",
+        // body: JSON.stringify({ level: this.level, score: this.score })
+      })
+        .then(response => {
+          return response.json();
+        })
+        .then(aquitance => {
+          if (aquitance && aquitance.status === "OK") {
+            this.scoreSaved = true;
+          }
+          // else/catch retry ?
         });
     }
   },
@@ -179,6 +267,7 @@ export default {
         this.animate();
         this.$el.focus();
         this.isPaused = false;
+        this.firstFrame = this.frame;
       }
     },
     isPaused(isPaused) {
@@ -189,6 +278,14 @@ export default {
     level() {
       this.reset();
       this.loadLevel();
+    },
+    won(hasWon) {
+      if (hasWon) {
+        const absoluteScore = this.maxScore - (this.frame - this.firstFrame);
+        this.score =
+          absoluteScore < this.minScore ? this.minScore : absoluteScore;
+        this.submitScore();
+      }
     }
   },
   computed: {
@@ -203,20 +300,16 @@ export default {
     }
   },
   beforeDestroy() {
-    window.removeEventListener("resize", this.resize);
     cancelAnimationFrame(this.frame);
-    clearInterval(this.dev_interval)
   }
 };
 </script>
 
 <style>
-svg {
-  background-color: black;
-}
 #solo {
   width: 100%;
   height: 100%;
+  background-color: black;
 }
 #solo:focus {
   border: none;

@@ -72,8 +72,8 @@ export default {
   },
   data() {
     return {
-      x: -10,
-      y: -10,
+      x: -40,
+      y: -40,
       vx: 0,
       vy: 0,
       angle: 0,

@@ -71,6 +71,16 @@ export default new Vuex.Store({
       return state.allFertelized = true
     },
     GERM_MOVED(state, germ) {
+      // optimisation to not dumbly check this is prone to error and have to be more calibrated
+      // also we are checking raduis distance while the tail is only in one direction
+      // so this can be further optimized
+
+      // If germ too far do not loop throu the tail points
+      if (Math.sqrt(
+        (germ.x - state.sperma.tailX[0]) ** 2 +
+        (germ.y - state.sperma.tailY[0]) ** 2
+      ) - germ.radius * germ.scale > 200) return
+      // Germ is near so we check tail
       for (let i = 0; i < state.sperma.tailX.length; i++) {
         if (
           Math.sqrt(
@@ -79,6 +89,7 @@ export default new Vuex.Store({
           ) <= germ.radius * germ.scale
         ) {
           state.collision = true
+          break;
         }
       }
     }

@@ -3,6 +3,8 @@
   "level": 3,
   "spawnCycle": 500,
   "viscosity": 0.002,
+  "maxScore": 50000,
+  "minScore": 5000,
   "sprites": [
     {
       "type": "ovum",
@@ -15,9 +17,9 @@
     },{
       "type": "ovum",
       "name": "alpha",
-      "x": 0.5,
-      "y": 0.6,
-      "vx": 0.3,
+      "x": 0.52,
+      "y": 0.5,
+      "vx": 0.9,
       "vy": 0.5,
       "vr": 1
     },
