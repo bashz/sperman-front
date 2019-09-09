@@ -4,6 +4,16 @@ import './assets/KontrBol.css'
 
 Vue.config.productionTip = false
 
-new Vue({
-  render: h => h(App),
-}).$mount('#app')
+window.fbAsyncInit = () => {
+  FB.init({
+    appId: '1679525178933111',
+    autoLogAppEvents: true,
+    xfbml: false,
+    status: true,
+    version: 'v4.0'
+  });
+
+  new Vue({
+    render: h => h(App),
+  }).$mount('#app')
+};

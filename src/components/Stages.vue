@@ -42,7 +42,7 @@ export default {
   },
   methods: {
     load() {
-      fetch(`/mock/levels.json`)
+      fetch(`${process.env.VUE_APP_API_URL}/level/`, {credentials: "include"})
         .then(response => {
           return response.json();
         })
@@ -57,6 +57,7 @@ export default {
     },
     restart() {
       this.choosenLevel = NaN;
+      this.load();
     },
     resize() {
       this.width = this.$el.clientWidth;

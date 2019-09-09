@@ -206,7 +206,10 @@ export default {
       this.scoreSaved = false;
     },
     loadAssets() {
-      fetch("/mock/sprites.json")
+      fetch(`${process.env.VUE_APP_API_URL}/sprite/`, {
+        mode: "cors",
+        credentials: "include"
+      })
         .then(response => {
           return response.json();
         })
@@ -216,7 +219,10 @@ export default {
         });
     },
     loadLevel() {
-      fetch(`/mock/levels/${this.level}.json`)
+      fetch(`${process.env.VUE_APP_API_URL}/level/${this.level}`, {
+        mode: "cors",
+        credentials: "include"
+      })
         .then(response => {
           return response.json();
         })
@@ -237,23 +243,21 @@ export default {
         });
     },
     submitScore() {
-      fetch(`/mock/score.json`, {
+      fetch(`${process.env.VUE_APP_API_URL}/score`, {
+        mode: "cors",
+        credentials: "include",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json"
         },
-        method: "GET",
-        // body: JSON.stringify({ level: this.level, score: this.score })
-      })
-        .then(response => {
-          return response.json();
-        })
-        .then(aquitance => {
-          if (aquitance && aquitance.status === "OK") {
-            this.scoreSaved = true;
-          }
-          // else/catch retry ?
-        });
+        method: "POST",
+        body: JSON.stringify({ level: this.level, score: this.score })
+      }).then(response => {
+        if (response.status >= 200 && response.status < 300) {
+          this.scoreSaved = true;
+        }
+        // else/catch retry ?
+      });
     }
   },
   watch: {

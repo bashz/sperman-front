@@ -1,6 +1,5 @@
 <template>
   <g :transform="transform">
-    <path :fill="defUrl" :d="d" :stroke="stroke" />
     <defs>
       <radialGradient :id="defId" cx="50%" cy="50%" :r="gradientRadiusPercent" fx="50%" fy="50%">
         <stop offset="0%" :style="{'stop-color': fertalizationColor}" />
@@ -8,6 +7,7 @@
         <stop offset="100%" :style="{'stop-color': color}" />
       </radialGradient>
     </defs>
+    <path :fill="defUrl" :d="d" :stroke="stroke" />
   </g>
 </template>
 
@@ -140,7 +140,7 @@ export default {
       return `${this.percent}%`;
     },
     gradientRadiusPercent() {
-      return `${this.percent / 2}%`;
+      return `${(this.percent / 2) || 1}%`;
     },
     isFertelized() {
       return this.percent === 100;
