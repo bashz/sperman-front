@@ -1,7 +1,7 @@
 <template>
   <g class="menu-button" :transform="transform">
     <polygon :stroke-width="1" stroke="#b6ffca" fill="#b6ffca" :points="hexagon" />
-    <text class="button-text" :x="positionText(text, 2)" y="-4">{{text}}</text>
+    <text class="button-text" y="-4">{{text}}</text>
     <path :d="icon" />
   </g>
 </template>
@@ -43,15 +43,10 @@ export default {
       hexagon: "0,16 13.856,8 13.856,-8 0,-16 -13.856,-8 -13.856,8 0,16"
     };
   },
-  methods: {
-    positionText(text, size) {
-      return -("" + text).length * size;
-    }
-  },
   computed: {
     transform() {
       return `translate(${this.width * this.position.x}, ${this.height *
-        this.position.y})rotate(${this.angle})scale(4)`;
+        this.position.y})rotate(${this.angle})scale(2)`;
     }
   }
 };
@@ -60,6 +55,7 @@ export default {
 <style>
 .button-text {
   font-size: 6px;
+  text-anchor: middle;
 }
 .menu-button {
   cursor: pointer;

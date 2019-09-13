@@ -146,6 +146,6 @@ export default {
 
 <style>
 .germ {
-  fill: #c0f541;
+  fill: #33bf00;
 }
 </style>

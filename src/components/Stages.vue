@@ -42,7 +42,7 @@ export default {
   },
   methods: {
     load() {
-      fetch(`${process.env.VUE_APP_API_URL}/level/`, {credentials: "include"})
+      fetch(`${process.env.VUE_APP_API_URL}/level/`, { credentials: "include" })
         .then(response => {
           return response.json();
         })

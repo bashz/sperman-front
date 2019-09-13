@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import store from '../store'
+import store from "../store";
 const degrees = 180 / Math.PI;
 export default {
   name: "Sperma",
@@ -82,7 +82,11 @@ export default {
     },
     frame() {
       this.swim();
-      this.$store.dispatch('spermaMoved', {id: this.id, tailX: this.tailX, tailY: this.tailY});
+      this.$store.dispatch("spermaMoved", {
+        id: this.id,
+        tailX: this.tailX,
+        tailY: this.tailY
+      });
     }
   },
   methods: {

@@ -1,6 +1,6 @@
 <template>
   <div id="multi">
-    <svg :style="style"/>
+    <svg :style="style" />
   </div>
 </template>
 

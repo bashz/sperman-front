@@ -118,7 +118,8 @@ export default {
     frame() {
       if (!this.isFertelized) {
         this.swim();
-        const percent = this.percent + this.$store.state.ovums[this.id].progress;
+        const percent =
+          this.percent + this.$store.state.ovums[this.id].progress;
         this.percent = percent > 0 ? (percent < 100 ? percent : 100) : 0;
       }
     },
@@ -140,7 +141,7 @@ export default {
       return `${this.percent}%`;
     },
     gradientRadiusPercent() {
-      return `${(this.percent / 2) || 1}%`;
+      return `${this.percent / 2 || 1}%`;
     },
     isFertelized() {
       return this.percent === 100;
@@ -149,16 +150,16 @@ export default {
       return this.isFertelized ? "#44ff66" : "none";
     },
     top() {
-      return this.radius
+      return this.radius;
     },
     left() {
-      return this.radius
+      return this.radius;
     },
     bottom() {
-      return this.height - this.radius
+      return this.height - this.radius;
     },
     right() {
-      return this.width - this.radius
+      return this.width - this.radius;
     }
   }
 };
