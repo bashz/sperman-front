@@ -1,20 +1,23 @@
 <template>
   <div id="game">
-    <div v-if="user">
+    <div v-if="player.connected === 1">
       <stages v-if="mode === 'solo'" />
       <rooms v-if="mode === 'multi'" />
+      <score-board v-if="mode === 'scoreboard'"/>
       <setting v-if="mode === 'setting'" />
       <div id="menu" v-if="mode === 'menu'">
-        <img src="/splash.png" class="logo" />
+        <nav-bar :with-button="false"/>
+        <img alt="Serpman Logo" src="./assets/logo.png" class="logo" />
         <div class="button-group">
           <button @click="toggle('solo')">Solo</button>
           <button @click="toggle('multi')">Multi</button>
           <button @click="toggle('setting')">Settings</button>
+          <button @click="toggle('scoreboard')">Scoreboard</button>
         </div>
       </div>
     </div>
-    <div v-if="!user">
-      <img src="/splash.png" />
+    <div v-if="player.connected !== 1">
+      <img alt="Serpman Logo" src="./assets/logo.png" />
       <h1>{{message}}</h1>
     </div>
   </div>
@@ -24,60 +27,47 @@
 import Stages from "./components/Stages";
 import Rooms from "./components/Rooms";
 import Setting from "./components/Setting";
+import ScoreBoard from "./components/ScoreBoard";
+import NavBar from "./components/shapes/NavBar"
+import store from "./components/store"
 export default {
   name: "App",
+  store,
   components: {
     Stages,
     Rooms,
-    Setting
+    Setting,
+    ScoreBoard,
+    NavBar
   },
   data() {
     return {
-      mode: "menu",
-      user: null,
-      message: "Loading, please wait"
+      messages: [
+        "Loading, please wait",
+        "",
+        "Please connect to your Facebook account to proceed",
+        "You need to authenticate to the app to proceed",
+        "Error while connecting to the game, please reload!"
+      ]
     };
   },
   mounted() {
-    FB.getLoginStatus(response => {
-      if (response.status === "connected") {
-        FB.api("/me", data => {
-          fetch(`${process.env.VUE_APP_API_URL}/login`, {
-            mode: "cors",
-            credentials: "include",
-            headers: {
-              Accept: "application/json",
-              "content-type": "application/json"
-            },
-            method: "POST",
-            body: JSON.stringify({
-              fbId: response.authResponse.userID,
-              signedRequest: response.authResponse.signedRequest,
-              expiresIn: response.authResponse.expiresIn,
-              name: data.name
-            })
-          })
-            .then(response => {
-              return response.json();
-            })
-            .then(user => {
-              this.user = user;
-            })
-            .catch(err => {
-              this.message =
-                "Error while connecting to the game, please reload!";
-            });
-        });
-      } else if (response.status === "not_authorized") {
-        this.message = "You need to authenticate to the app to proceed";
-      } else {
-        this.message = "Please connect to your Facebook account to proceed";
-      }
-    });
+    this.$store.dispatch('login')
   },
   methods: {
     toggle(mode) {
-      this.mode = mode;
+      this.$store.dispatch("switchMode", mode)
+    }
+  },
+  computed: {
+    mode() {
+      return this.$store.state.mode
+    },
+    message(){
+      return this.messages[this.$store.state.player.connected]
+    },
+    player() {
+      return this.$store.state.player
     }
   }
 };
@@ -87,23 +77,21 @@ export default {
 #game {
   height: 600px;
   width: 800px;
+  background-color: #000000;
 }
 #menu {
   height: 600px;
   width: 800px;
   background-color: #000000;
-  text-align: center;
 }
 html {
   font-family: kontrapunkt;
-}
-h1 {
-  color: #ffffff;
-  margin: -20% 20%;
   text-align: center;
+  text-anchor: middle;
+  color: #ffffff;
 }
 .logo {
-  width: 300px;
+  width: 200px;
   height: 200px;
 }
 .button-group {
@@ -111,7 +99,7 @@ h1 {
   width: 200px;
 }
 button {
-  margin: 0 0 32px 0;
+  margin: 24px 0;
   color: #000000;
   text-transform: uppercase;
   background: #ffffff;

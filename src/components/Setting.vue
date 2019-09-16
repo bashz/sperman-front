@@ -1,10 +1,16 @@
 <template>
-  <div id="setting"></div>
+  <div id="setting">
+    <nav-bar />
+  </div>
 </template>
 
 <script>
+import NavBar from "./shapes/NavBar"
 export default {
-  name: "Setting"
+  name: "Setting",
+  components: {
+    NavBar
+  }
 };
 </script>
 

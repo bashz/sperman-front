@@ -57,7 +57,6 @@ export default {
 <style>
 .score {
   fill: #ffffff;
-  text-anchor: middle;
 }
 .text {
   font-size: 16px;

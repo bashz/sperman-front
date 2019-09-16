@@ -55,7 +55,6 @@ export default {
 <style>
 .button-text {
   font-size: 6px;
-  text-anchor: middle;
 }
 .menu-button {
   cursor: pointer;

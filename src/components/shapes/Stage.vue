@@ -57,7 +57,7 @@ export default {
     transform() {
       return `translate(${90 +
         30 * (Math.floor((this.level.level - 1) / 10) % 2) +
-        ((this.level.level - 1) % 10) * 60}, ${45 +
+        ((this.level.level - 1) % 10) * 60}, ${75 +
         Math.floor((this.level.level - 1) / 10) * 52})scale(2)`;
     },
     fill() {
@@ -73,10 +73,8 @@ export default {
 <style>
 .level-number {
   font-size: 8px;
-  text-anchor: middle;
 }
 .level-score {
   font-size: 5px;
-  text-anchor: middle;
 }
 </style>

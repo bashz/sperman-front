@@ -1,13 +1,16 @@
 <template>
   <div id="stages">
-    <svg v-if="!choosenLevel" :style="style">
-      <stage
-        v-for="level in levels"
-        :key="level.level"
-        :level="level"
-        @click.native="chooseLevel(level)"
-      />
-    </svg>
+    <div v-if="!choosenLevel">
+      <nav-bar />
+      <svg  :style="style">
+        <stage
+          v-for="level in levels"
+          :key="level.level"
+          :level="level"
+          @click.native="chooseLevel(level)"
+        />
+      </svg>
+    </div>
     <solo
       v-if="choosenLevel"
       :entry-level="choosenLevel"
@@ -21,11 +24,13 @@
 <script>
 import Solo from "./games/Solo";
 import Stage from "./shapes/Stage";
+import NavBar from "./shapes/NavBar";
 export default {
   name: "Stages",
   components: {
     Solo,
-    Stage
+    Stage,
+    NavBar
   },
   data() {
     return {
@@ -79,8 +84,7 @@ export default {
 #stages {
   width: 100%;
   height: 100%;
-  background-color: #000;
-  color: #fff;
+  text-align: left;
 }
 ul {
   padding: 0;

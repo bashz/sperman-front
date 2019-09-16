@@ -268,8 +268,17 @@ export default {
       }).then(response => {
         if (response.status >= 200 && response.status < 300) {
           this.scoreSaved = true;
+          if (response.status === 200 || response.status === 201) {
+            return response.json()
+          }
         }
         // else/catch retry ?
+      }).then(data => {
+        if (data.endGame) {
+          // do end game
+        } else if (data.newScore) {
+          return this.$store.dispatch("setScore", data.newScore)
+        }
       });
     }
   },
