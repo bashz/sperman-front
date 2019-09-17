@@ -6,7 +6,7 @@ Vue.config.productionTip = false
 
 window.fbAsyncInit = () => {
   FB.init({
-    appId: '1679525178933111',
+    appId: process.env.VUE_APP_FB_APP_ID,
     autoLogAppEvents: true,
     xfbml: false,
     status: true,
