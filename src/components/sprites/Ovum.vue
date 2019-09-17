@@ -24,11 +24,11 @@ export default {
     // Game dimensions
     width: {
       type: Number,
-      default: 800
+      default: 760
     },
     height: {
       type: Number,
-      default: 600
+      default: 570
     },
     // Ovum's initial position
     originX: {

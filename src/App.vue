@@ -75,13 +75,13 @@ export default {
 
 <style>
 #game {
-  height: 600px;
-  width: 800px;
+  height: 570px;
+  width: 760px;
   background-color: #000000;
 }
 #menu {
-  height: 600px;
-  width: 800px;
+  height: 570px;
+  width: 760px;
   background-color: #000000;
 }
 html {

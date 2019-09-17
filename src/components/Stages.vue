@@ -36,8 +36,8 @@ export default {
     return {
       levels: [],
       choosenLevel: NaN,
-      height: 600,
-      width: 800
+      height: 570,
+      width: 760
     };
   },
   mounted() {

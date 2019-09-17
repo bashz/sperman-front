@@ -137,11 +137,11 @@ export default {
   props: {
     height: {
       type: Number,
-      default: 600
+      default: 570
     },
     width: {
       type: Number,
-      default: 800
+      default: 760
     },
     entryLevel: {
       type: Number,
@@ -265,21 +265,25 @@ export default {
         },
         method: "POST",
         body: JSON.stringify({ level: this.level, score: this.score })
-      }).then(response => {
-        if (response.status >= 200 && response.status < 300) {
-          this.scoreSaved = true;
-          if (response.status === 200 || response.status === 201) {
-            return response.json()
+      })
+        .then(response => {
+          if (response.status >= 200 && response.status < 300) {
+            this.scoreSaved = true;
+            if (response.status === 200 || response.status === 201) {
+              return response.json();
+            }
           }
-        }
-        // else/catch retry ?
-      }).then(data => {
-        if (data.endGame) {
-          // do end game
-        } else if (data.newScore) {
-          return this.$store.dispatch("setScore", data.newScore)
-        }
-      });
+          // else/catch retry ?
+        })
+        .then(data => {
+          if (data) {
+            if (data.endGame) {
+              // do end game
+            } else if (data.newScore) {
+              return this.$store.dispatch("setScore", data.newScore);
+            }
+          }
+        });
     }
   },
   watch: {
