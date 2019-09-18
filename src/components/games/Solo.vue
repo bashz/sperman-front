@@ -158,8 +158,8 @@ export default {
       sprites: [],
       germs: [],
       ovums: [],
-      maxScore: 50000,
-      minScore: 5000,
+      maxScore: 5000,
+      minScore: 500,
       score: 0,
       assetsLoaded: false,
       levelReady: false,
@@ -242,14 +242,15 @@ export default {
         .then(level => {
           this.spawnCycle = level.spawnCycle || 500;
           this.viscosity = level.viscosity || 0.002;
-          this.maxScore = level.maxScore || 50000;
-          this.minScore = level.minScore || 5000;
+          this.maxScore = level.maxScore || 5000;
+          this.minScore = level.minScore || 500;
           level.sprites.forEach((character, i) => {
             const specie = this.sprites.find(
               sprite => sprite.name === character.name
             );
+            specie.id = i;
             (character.type === "ovum" ? this.ovums : this.germs).push(
-              Object.assign({ id: i }, character, specie)
+              Object.assign({}, character, specie)
             );
           });
           this.levelReady = true;
