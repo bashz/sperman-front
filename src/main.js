@@ -1,8 +1,12 @@
 import Vue from 'vue'
 import App from './App.vue'
 import './assets/KontrBol.css'
+import Websocket from './utils/vue-sails-websocket'
 
 Vue.config.productionTip = false
+
+// Websocket
+Vue.use(Websocket, process.env.VUE_APP_API_URL)
 
 window.fbAsyncInit = () => {
   FB.init({
