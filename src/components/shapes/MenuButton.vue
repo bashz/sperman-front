@@ -27,11 +27,11 @@ export default {
     },
     height: {
       type: Number,
-      default: 600
+      default: 570
     },
     width: {
       type: Number,
-      default: 800
+      default: 760
     },
     angle: {
       type: Number,

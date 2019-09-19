@@ -1,6 +1,7 @@
 <template>
   <div id="rooms">
     <nav-bar />
+    <h1 class="coming-soon">Coming Soon</h1>
   </div>
 </template>
 
@@ -15,4 +16,9 @@ export default {
 </script>
 
 <style>
+.coming-soon {
+  position: relative;
+  top: 200px;
+  margin: 0;
+}
 </style>

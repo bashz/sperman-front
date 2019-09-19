@@ -41,7 +41,7 @@ export default {
 <style>
 .nav-bar {
   position: fixed;
-  width: 800px;
+  width: 760px;
 }
 .nav-bar-back {
   width: 27%;

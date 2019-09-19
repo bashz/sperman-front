@@ -53,42 +53,53 @@ export default new Vuex.Store({
     },
     LOGIN(state) {
       FB.getLoginStatus(response => {
-        if (response.status === "connected") {
-          FB.api("/me", data => {
-            fetch(`${process.env.VUE_APP_API_URL}/login`, {
-              mode: "cors",
-              credentials: "include",
-              headers: {
-                Accept: "application/json",
-                "content-type": "application/json"
-              },
-              method: "POST",
-              body: JSON.stringify({
-                fbId: response.authResponse.userID,
-                signedRequest: response.authResponse.signedRequest,
-                expiresIn: response.authResponse.expiresIn,
-                name: data.name
-              })
-            })
-              .then(response => {
-                return response.json();
-              })
-              .then(user => {
-                state.player.id = user.id
-                state.player.name = user.name;
-                state.player.score = user.totalScore;
-                state.player.connected = 1
-              })
-              .catch(() => {
-                state.player.connected = 4
-              });
-          });
-        } else if (response.status === "not_authorized") {
-          state.player.connected = 3
+        console.log(response)
+        if (response.status === "not_authorized") {
+          console.log(response)
+          FB.login(loginResponse => {
+            this.dispatch('processLogin', loginResponse)
+          })
         } else {
-          state.player.connected = 2
+          this.dispatch('processLogin', response)
         }
       });
+    },
+    PROCESS_LOGIN(state, response) {
+      if (response.status === "connected") {
+        FB.api("/me", data => {
+          fetch(`${process.env.VUE_APP_API_URL}/login`, {
+            mode: "cors",
+            credentials: "include",
+            headers: {
+              Accept: "application/json",
+              "content-type": "application/json"
+            },
+            method: "POST",
+            body: JSON.stringify({
+              fbId: response.authResponse.userID,
+              signedRequest: response.authResponse.signedRequest,
+              expiresIn: response.authResponse.expiresIn,
+              name: data.name
+            })
+          })
+            .then(response => {
+              return response.json();
+            })
+            .then(user => {
+              state.player.id = user.id
+              state.player.name = user.name;
+              state.player.score = user.totalScore;
+              state.player.connected = 1
+            })
+            .catch(() => {
+              state.player.connected = 4
+            });
+        });
+      } else if (response.status === "not_authorized") {
+        state.player.connected = 3
+      } else {
+        state.player.connected = 2
+      }
     },
     SET_SCORE(state, score) {
       state.player.score = score
@@ -155,6 +166,9 @@ export default new Vuex.Store({
   actions: {
     login(context) {
       context.commit('LOGIN')
+    },
+    processLogin(context, response) {
+      context.commit('PROCESS_LOGIN', response)
     },
     setScore(context, score) {
       context.commit('SET_SCORE', score)

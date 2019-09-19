@@ -137,11 +137,11 @@ export default {
   props: {
     height: {
       type: Number,
-      default: 600
+      default: 570
     },
     width: {
       type: Number,
-      default: 800
+      default: 760
     },
     entryLevel: {
       type: Number,
@@ -158,8 +158,8 @@ export default {
       sprites: [],
       germs: [],
       ovums: [],
-      maxScore: 50000,
-      minScore: 5000,
+      maxScore: 5000,
+      minScore: 500,
       score: 0,
       assetsLoaded: false,
       levelReady: false,
@@ -242,14 +242,15 @@ export default {
         .then(level => {
           this.spawnCycle = level.spawnCycle || 500;
           this.viscosity = level.viscosity || 0.002;
-          this.maxScore = level.maxScore || 50000;
-          this.minScore = level.minScore || 5000;
+          this.maxScore = level.maxScore || 5000;
+          this.minScore = level.minScore || 500;
           level.sprites.forEach((character, i) => {
             const specie = this.sprites.find(
               sprite => sprite.name === character.name
             );
+            specie.id = i;
             (character.type === "ovum" ? this.ovums : this.germs).push(
-              Object.assign({ id: i }, character, specie)
+              Object.assign({}, character, specie)
             );
           });
           this.levelReady = true;
@@ -265,21 +266,25 @@ export default {
         },
         method: "POST",
         body: JSON.stringify({ level: this.level, score: this.score })
-      }).then(response => {
-        if (response.status >= 200 && response.status < 300) {
-          this.scoreSaved = true;
-          if (response.status === 200 || response.status === 201) {
-            return response.json()
+      })
+        .then(response => {
+          if (response.status >= 200 && response.status < 300) {
+            this.scoreSaved = true;
+            if (response.status === 200 || response.status === 201) {
+              return response.json();
+            }
           }
-        }
-        // else/catch retry ?
-      }).then(data => {
-        if (data.endGame) {
-          // do end game
-        } else if (data.newScore) {
-          return this.$store.dispatch("setScore", data.newScore)
-        }
-      });
+          // else/catch retry ?
+        })
+        .then(data => {
+          if (data) {
+            if (data.endGame) {
+              // do end game
+            } else if (data.newScore) {
+              return this.$store.dispatch("setScore", data.newScore);
+            }
+          }
+        });
     }
   },
   watch: {

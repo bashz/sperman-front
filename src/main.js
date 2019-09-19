@@ -10,7 +10,7 @@ Vue.use(Websocket, process.env.VUE_APP_API_URL)
 
 window.fbAsyncInit = () => {
   FB.init({
-    appId: '469960100273039',
+    appId: process.env.VUE_APP_FB_APP_ID,
     autoLogAppEvents: true,
     xfbml: false,
     status: true,
