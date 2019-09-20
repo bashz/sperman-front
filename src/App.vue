@@ -11,14 +11,17 @@
         <div class="button-group">
           <button @click="toggle('solo')">Solo</button>
           <button @click="toggle('multi')">Multi</button>
-          <button @click="toggle('setting')">Settings</button>
           <button @click="toggle('scoreboard')">Scoreboard</button>
+          <button @click="toggle('setting')">Credits</button>
         </div>
       </div>
     </div>
     <div v-if="player.connected !== 1">
       <img alt="Serpman Logo" src="./assets/logo.png" />
       <h1>{{message}}</h1>
+    </div>
+    <div class="release">
+      <span>Version 1.0.0-OpenBeta</span>
     </div>
   </div>
 </template>
@@ -124,5 +127,10 @@ button:disabled {
   color: #000000;
   background: #494949;
   border-color: #494949;
+}
+.release {
+  font-size: 10px;
+  margin-top: -10px;
+  text-align: right;
 }
 </style>
