@@ -1,6 +1,6 @@
 <template>
-  <g>
-    <ellipse rx="8" ry="5" :fill="color" :transform="head"></ellipse>
+  <g :opacity="isStunned? 0.6 : 1">
+    <ellipse rx="8" ry="5" :fill="color" :stroke-width="collided" stroke="#ffffff" :transform="head"></ellipse>
     <path class="mid" :stroke="color" :d="mid"></path>
     <path class="tail" :stroke="color" :d="tail"></path>
   </g>
@@ -79,7 +79,8 @@ export default {
       mid: "",
       tail: "",
       foreign: {},
-      isStunned: false
+      isStunned: 0,
+      collided: 0
     };
   },
   socket: {
@@ -89,21 +90,30 @@ export default {
       },
       collision(data) {
         if (data.id === this.id) {
-          this.isStunned = true;
+          this.collided = 15;
+          this.isStunned = data.stunned;
+          this.vx = data.vx;
+          this.vy = data.vy;
         }
       }
     }
   },
   watch: {
     target() {
-      if (this.id === this.target.id) {
+      if (this.id === this.target.id && !this.isStunned) {
         this.vx = this.power * (this.target.x - this.tailX[0]);
         this.vy = this.power * (this.target.y - this.tailY[0]);
       }
     },
     frame() {
+      if (this.isStunned) {
+        this.isStunned--;
+      }
+      if (this.collided) {
+        this.collided--;
+      }
       if (this.id === this.target.id) {
-        if (!this.isStunned) this.swim();
+        this.swim();
         if (!this.id) {
           this.$store.dispatch("spermaMoved", {
             id: this.id,
@@ -117,7 +127,10 @@ export default {
             mid: this.mid,
             tail: this.tail,
             x: this.tailX[0],
-            y: this.tailY[0]
+            y: this.tailY[0],
+            vx: this.vx,
+            vy: this.vy,
+            isStunned: this.isStunned
           });
         }
       } else {
@@ -172,6 +185,7 @@ export default {
 </script>
 
 <style>
+
 .mid {
   stroke-width: 4px;
   fill: none;
