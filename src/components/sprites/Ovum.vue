@@ -33,11 +33,11 @@ export default {
     // Ovum's initial position
     originX: {
       type: Number,
-      default: 400
+      default: 380
     },
     originY: {
       type: Number,
-      default: 300
+      default: 285
     },
     // Ovum's motion
     originVX: {

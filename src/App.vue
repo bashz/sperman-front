@@ -112,11 +112,17 @@ button {
   width: 200px;
   display: block;
 }
-button:hover {
+button:hover:enabled {
   color: #000000;
   text-shadow: 0px 2px 5px #000000;
   border-radius: 50px;
   border-color: #494949;
   transition: all 0.3s ease 0s;
+}
+button:disabled {
+  cursor: not-allowed;
+  color: #000000;
+  background: #494949;
+  border-color: #494949;
 }
 </style>

@@ -16,4 +16,9 @@ export default {
 </script>
 
 <style>
+.coming-soon {
+  position: relative;
+  top: 200px;
+  margin: 0;
+}
 </style>

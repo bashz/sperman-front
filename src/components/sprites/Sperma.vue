@@ -54,11 +54,16 @@ export default {
     target: {
       type: Object,
       default() {
-        return { x: 300, y: 400 };
+        return { x: 300, y: 400, id: -1 };
       }
     },
     // The number of actual frame
     frame: {
+      type: Number,
+      default: 0
+    },
+    // For other players
+    room: {
       type: Number,
       default: 0
     }
@@ -72,21 +77,52 @@ export default {
       tailY: new Array(12).fill(this.originY),
       head: "",
       mid: "",
-      tail: ""
+      tail: "",
+      foreign: {},
+      isStunned: false
     };
+  },
+  socket: {
+    events: {
+      foreign(data) {
+        this.foreign = data;
+      },
+      collision(data) {
+        if (data.id === this.id) {
+          this.isStunned = true;
+        }
+      }
+    }
   },
   watch: {
     target() {
-      this.vx = this.power * (this.target.x - this.tailX[0]);
-      this.vy = this.power * (this.target.y - this.tailY[0]);
+      if (this.id === this.target.id) {
+        this.vx = this.power * (this.target.x - this.tailX[0]);
+        this.vy = this.power * (this.target.y - this.tailY[0]);
+      }
     },
     frame() {
-      this.swim();
-      this.$store.dispatch("spermaMoved", {
-        id: this.id,
-        tailX: this.tailX,
-        tailY: this.tailY
-      });
+      if (this.id === this.target.id) {
+        if (!this.isStunned) this.swim();
+        if (!this.id) {
+          this.$store.dispatch("spermaMoved", {
+            id: this.id,
+            tailX: this.tailX,
+            tailY: this.tailY
+          });
+        } else {
+          this.$io.socket.post(`/multi/${this.room}`, {
+            id: this.id,
+            head: this.head,
+            mid: this.mid,
+            tail: this.tail,
+            x: this.tailX[0],
+            y: this.tailY[0]
+          });
+        }
+      } else {
+        this.draw();
+      }
     }
   },
   methods: {
@@ -125,6 +161,11 @@ export default {
       })rotate(${Math.atan2(this.vy, this.vx) * degrees})`;
       this.mid = mid;
       this.tail = tail;
+    },
+    draw() {
+      this.head = this.foreign.head;
+      this.mid = this.foreign.mid;
+      this.tail = this.foreign.tail;
     }
   }
 };

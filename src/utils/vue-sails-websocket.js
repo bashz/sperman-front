@@ -40,7 +40,7 @@ export default {
 
     Vue.mixin({
       // Vue v1.x
-      beforeCompile: addListeners,
+      //beforeCompile: addListeners,
 
       // Vue v2.x
       beforeCreate: addListeners,

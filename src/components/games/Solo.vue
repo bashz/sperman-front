@@ -203,7 +203,7 @@ export default {
       return percent * (isVertical ? this.height : this.width);
     },
     ejaculate(e) {
-      this.target = { x: e.clientX, y: e.clientY };
+      this.target = { x: e.clientX, y: e.clientY, id: 0 };
     },
     animate() {
       if (!(this.isPaused || this.lost || this.won))
