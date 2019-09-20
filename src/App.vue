@@ -20,7 +20,7 @@
       <img alt="Serpman Logo" src="./assets/logo.png" />
       <h1>{{message}}</h1>
     </div>
-    <div class="release">
+    <div class="release" v-if="mode !== 'multi' && mode !== 'solo'">
       <span>Version 1.0.0-OpenBeta</span>
     </div>
   </div>
@@ -130,7 +130,9 @@ button:disabled {
 }
 .release {
   font-size: 10px;
-  margin-top: -10px;
+  position: absolute;
   text-align: right;
+  top: 560px;
+  right: 40px;
 }
 </style>
